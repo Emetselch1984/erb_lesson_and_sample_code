@@ -1,0 +1,68 @@
+Table User as u{
+  id int  [pk,increment]
+  name varcharacter(255)
+  introduction varcharacter(255)
+  created_at datetime [not null]
+  }
+Table Article as a{
+  id int  [pk,increment]
+  user_id references
+  title varcharacter(255)
+  description varcharacter(255)
+  created_at datetime [not null]
+  }
+Table Skill as s{
+  id int  [pk,increment]
+  name varcharacter(255)
+  user_id references
+  skill_category_id references
+  created_at datetime [not null]
+  }
+
+Table SkillCategory as s_category{
+  id int  [pk,increment]
+  name varcharacter(255)
+  reccomend boolean
+  created_at datetime [not null]
+  }
+Table Tag as t{
+  id int  [pk,increment]
+  name varcharacter(255)
+  created_at datetime [not null]
+  }
+Table ArticleTag as a_tag{
+  id int  [pk,increment]
+  article_id references
+  tag_id references
+  created_at datetime [not null]
+  }
+Table UserCaution as u_c{
+  id int  [pk,increment]
+  user_id references
+  created_at datetime [not null]
+  }
+Table CautionFreeze as c_freeze{
+  id int  [pk,increment]
+  user_caution_id references
+  start_time datetime
+  end_time datetime
+  created_at datetime [not null]
+  }
+
+ref: u.id < a.user_id
+ref: u.id < s.user_id
+ref: s_category.id < s.skill_category_id
+ref: t.id < a_tag.tag_id
+ref: a.id < a_tag.article_id
+ref: u.id < u_c.user_id
+ref: u_c.id < c_freeze.user_caution_id
+
+Skill.limit(5).filter {|s| s.skill_category.nmae == 'rails' }
+Skill.joins(:skill_category).where('skill_categories.name' =?,'rails')
+Skill.limit(5).each do |skill|
+ p skill.skill_category.name
+end
+
+Skill.eager_load(:skill_category).limit(5).each do |skill|
+ p skill.skill_category.name
+end

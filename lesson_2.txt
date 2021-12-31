@@ -1,0 +1,57 @@
+Table "ユーザー" as u{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  "フリガナ" varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "電話番号" as phone{
+  id int  [pk,increment]
+  "電話番号" int
+  "電話番号カテゴリー_id" references
+ }
+Table "電話番号カテゴリー" as phone_s{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+ }
+Table "予約する" as r{
+  id int  [pk,increment]
+  "ユーザー_id" references
+  "本_id" references
+  "電話番号_id" references
+  "貸し出し番号" int
+  "申し込み日" date
+  "署名" boolean
+  "受け取り希場所" varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "知ったきっかけ" as k{
+  id int  [pk,increment]
+  "ユーザー_id" references
+  "新着図書案内番号" int
+  "新聞名" varcharacter(255)
+  "新聞掲載日時" date
+  "その他" text
+ }
+Table "本" as b{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  "著者_id" references
+  "出版社_id" references
+  "出版年" date
+ }
+Table "著者" as a{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+ }
+Table "出版社" as p{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+ }
+
+ref: phone.id < r."電話番号_id"
+ref: phone."電話番号カテゴリー_id" - phone_s.id
+ref: u.id < k."ユーザー_id"
+ref: u.id < r."ユーザー_id"
+ref: b.id < r."本_id"
+ref: a.id < b."著者_id"
+ref: p.id < b."出版社_id"

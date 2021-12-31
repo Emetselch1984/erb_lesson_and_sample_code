@@ -1,0 +1,63 @@
+Table "受付" as r{
+  id int  [pk,increment]
+  "ユーザー_id" references
+  "端末番号" int
+  "会計番号" int
+  created_at datetime [not null]
+  }
+Table "ユーザー" as u{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  "フリガナ" varcharacter(255)
+  "生年月日" date
+  created_at datetime [not null]
+ }
+Table "受付明細" as r_detail{
+  id int  [pk,increment]
+  "受付_id" references
+  "病院_id" references
+  "受診科_id" references
+  "受診内容_id" references
+  "医者_id" references
+  created_at datetime [not null]
+  }
+Table "病院" as h{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "受診科" as m{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "受診内容" as r_context{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  created_at datetime [not null]
+  }
+Table "医者" as d{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  created_at datetime [not null]
+  }
+ref: u.id < r."ユーザー_id"
+ref: r.id - r_detail."受付_id"
+ref: h.id < r_detail."病院_id"
+ref: m.id < r_detail."受診科_id"
+ref: r_context.id < r_detail."受診内容_id"
+ref: d.id < r_detail."医者_id"
+
+
+r_detail.created_at
+r_detail.r."端末番号"
+r_detail.r.u."名前"
+r_detail.r.u."フリガナ"
+r_detail.r.u."生年月日"
+r_detail.r.u.id
+r_detail.m."名前"
+r_detail.r_context."名前"
+r_detail.d."名前"
+r_detail.r_context.created_at
+r_detail.r."会計番号"
+r_detail.h."名前"

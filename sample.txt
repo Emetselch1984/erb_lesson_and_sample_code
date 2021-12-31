@@ -1,0 +1,155 @@
+table users as u {
+      id int [pk,increment]
+    user_id bigint(20)
+    email varcharacter(255) [not null]
+    crypted_password varcharacter(255)
+    salt varcharacter(255)
+    type varcharacter(255) [default: "Staff"]
+    created_at datetime [not null]
+    updated_at datetime [not null]
+    family_name varcharacter(255)
+    family_name_kana varcharacter(255)
+    given_name varcharacter(255)
+    given_name_kana varcharacter(255)
+    start_date date
+    end_date date
+    suspended boolean [default: false]
+    gender varcharacter(255)
+    birthday date
+    birth_year int
+    birth_month int
+    birth_mday int
+
+}
+table staff as s {
+  id int [pk,increment]
+  type varcharacter(255) [default: `Staff`]
+}
+table customers as c {
+  id int [pk,increment]
+  type varcharacter(255) [default: `Staff`]
+}
+table admin as a {
+  id int [pk,increment]
+  type varcharacter(255) [default: `Staff`]
+}
+
+TableGroup users_group {
+  users
+  staff
+  customers
+  admin
+}
+
+ref: u.id - s.id
+ref: u.id - a.id
+ref: u.id - c.id
+
+  table staff_events as events {
+    id int [pk,increment]
+    user_id bigint(20)
+    type varcharacter(255) [not null]
+    created_at datetime [not null]
+  }
+ref: s.id < events.user_id
+  table addresses as ad {
+    id int [pk,increment]
+    user_id bigint(20)
+    type varcharacter(255) [not null]
+    postal_code varcharacter(255)
+    prefecture varcharacter(255)
+    city varcharacter(255)
+    address1 varcharacter(255)
+    address2 varcharacter(255)
+    company_name varcharacter(255)
+    division_name varcharacter(255)
+
+  }
+  table homeAddresses as homeAd {
+    id int [pk,increment]
+    user_id bigint(20)
+    type varcharacter(255)
+  }
+  table workAddresses as workAd {
+    id int [pk,increment]
+    user_id bigint(20)
+    type varcharacter(255) [not null]
+  }
+  ref: ad.id - homeAd.id
+  ref: ad.id - workAd.id
+  ref: c.id - homeAd.user_id
+  ref: c.id - workAd.user_id
+
+  table phones as ph {
+    id int [pk,increment]
+    user_id bigint(20)
+    address_id bigint(20)
+    number varcharacter(255) [not null]
+    number_for_index varcharacter(255)
+    primary boolean
+    created_at datetime [not null]
+    updated_at datetime [not null]
+  }
+  ref: c.id < ph.user_id
+  ref: homeAd.id < ph.address_id
+  ref: workAd.id < ph.address_id
+
+  table programs as program {
+    id int [pk,increment]
+    registrant_id bigint(20)
+    title varcharacter(255) [not null]
+    description text
+    max_number_of_participants int
+    min_number_of_participants int
+    application_start_time datetime [not null]
+    application_end_time datetime [not null]
+    created_at datetime [not null]
+    updated_at datetime [not null]
+  }
+  ref: s.id < program.registrant_id
+
+  table entries as en {
+    id int [pk,increment]
+    user_id bigint(20)
+    program_id bigint(20)
+    approved boolean [not null]
+    canceled boolean [not null]
+    created_at datetime [not null]
+    updated_at datetime [not null]
+  }
+  ref: c.id < en.user_id
+  ref: program.id < en.program_id
+
+    table messages as message {
+    id int [pk,increment]
+    user_id bigint(20)
+    root_id bigint(20)
+    parent_id bigint(20)
+    staff_id bigint(20)
+    type varcharacter(255) [not null]
+    status varcharacter(255) [not null,default: "new"]
+    subject varcharacter(255) [not null]
+    body text
+    remarks text
+    discarded boolean [not null]
+    deleted boolean [not null]
+    created_at datetime [not null]
+    updated_at datetime [not null]
+  }
+    table custoerMessages as Cmessage {
+    id int [pk,increment]
+    user_id bigint(20)
+    type varcharacter(255) [not null]
+  }
+  table staffMessages as Smessage {
+    id int [pk,increment]
+    staff_id bigint(20)
+    type varcharacter(255) [not null]
+  }
+  ref: message.id - Cmessage.id
+  ref: message.id - Smessage.id
+  ref: c.id < Cmessage.user_id
+  ref: s.id < Smessage.staff_id
+
+
+Ref: "programs"."id" < "programs"."description"

@@ -1,0 +1,65 @@
+Table "注文" as o{
+  id int  [pk,increment]
+  "レジ_id" references
+  "合計【導出項目】" int
+  "消費税【導出項目】" int
+  created_at datetime [not null]
+  }
+Table "預かり" as r{
+  id int  [pk,increment]
+  "注文_id" references
+  "受け取り値" int
+  "支払い金額【導出項目】" int
+  }
+Table "注文詳細" as o_detail{
+  id int  [pk,increment]
+  "注文_id" references
+  "商品_id" references
+  "数量" int
+  }
+Table "レジ" as register{
+  id int  [pk,increment]
+  }
+
+Table "商品" as g{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  "価格" int
+  "セット商品区分" int
+  }
+Table "セット商品" as g_set{
+  id int  [pk,increment]
+  "商品_id" references
+  "セット商品区分_id" references
+ }
+ref: o.id - r.id"
+ref: o.id < o_detail."注文_id"
+ref: g.id < o_detail."商品_id"
+ref: register.id < o."レジ_id"
+ref: g.id < g_set."商品_id"
+ref: g."セット商品区分" < g_set."セット商品区分_id"
+
+[
+{
+  name: "チーズバーガーセット",
+  price: 650,
+  "セット商品区分": 555
+ }
+]."セット商品"."商品"
+[
+ {
+  name: "チーズバーガー",
+  price: 0,
+  "セット商品区分": 555
+ },
+  {
+   name: "ポテト",
+   price: 0,
+   "セット商品区分": 555
+  },
+   {
+    name: "ドリンク",
+    price: 0,
+    "セット商品区分": 555
+   },
+]

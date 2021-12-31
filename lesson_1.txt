@@ -1,0 +1,40 @@
+Table "顧客" as u{
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  "電話番号" int
+  created_at datetime [not null]
+ }
+
+Table "注文" as o {
+  id int  [pk,increment]
+  "顧客_id" references
+ }
+Table "注文詳細" as od {
+  id int  [pk,increment]
+  "注文_id" references
+  created_at datetime [not null]
+ }
+Table "商品" as g {
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  "値段" int
+  "注文詳細_id" references
+  "商品区分_id" references
+  "商品カテゴリー_id" references
+
+ }
+Table "商品区分" as g_s {
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+  }
+Table "商品カテゴリー" as g_c {
+  id int  [pk,increment]
+  "名前" varcharacter(255)
+ }
+
+ref: u.id < o."顧客_id"
+ref: o.id - od."注文_id"
+ref: od.id < g."注文詳細_id"
+ref: g."商品カテゴリー_id" - g_c.id
+ref: g."商品区分_id" - g_s.id
+
