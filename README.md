@@ -1,0 +1,2 @@
+# erb_lesson_and_sample_code
+外食した際のレシートなど身近なモノからDB設計をする。
