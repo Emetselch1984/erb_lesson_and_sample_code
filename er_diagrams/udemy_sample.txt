@@ -1,0 +1,18 @@
+Table Users as u{
+  id int  [pk,increment]
+  email varcharacter(255)
+  last_name varcharacter(255)
+  first_name varcharacter(255)
+  gender int
+  birthday datetime
+  prefecture_id references
+  }
+Table Prefecture as prefecture{
+  id int  [pk,increment]
+  name varcharacter(255)
+  }
+ref: u.prefecture_id - prefecture.id
+
+udemyのサンプルをER図
+ユーザーテーブルとPrefectureテーブルを作成。
+1対1で関連付け
