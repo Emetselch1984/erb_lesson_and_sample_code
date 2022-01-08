@@ -52,6 +52,7 @@ WINDOW W AS (ORDER BY sample_date ASC
 ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING)
 
 -- フレームを後ろに移動
+-- 直後の日付とデータを表示
 SELECT sample_date AS cur_date,
 load_val AS cur_load,
 MIN (sample_date) OVER W AS next_date,
