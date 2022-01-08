@@ -1,0 +1,74 @@
+Table "領収書" as receipt{
+  id int  [pk,increment]
+   "端末_id" references
+   "診療_id" references
+   "発行日" datetime
+   "請求期間" datetime
+  created_at datetime [not null]
+  }
+Table "領収書明細" as receipt_detailed{
+  id int  [pk,increment]
+   "領収書_id" references
+   "保険負担" int
+  created_at datetime [not null]
+  }
+
+Table "端末" as terminal{
+  id int  [pk,increment]
+  "ユーザー_id" references
+  created_at datetime [not null]
+  }
+Table "ユーザー" as user{
+  id int  [pk,increment]
+  name varcharacter(255)
+  "フリガナ" varcharacter(255)
+  "保険区分_id" references
+  created_at datetime [not null]
+ }
+Table "保険区分" as insurance_category{
+  id int  [pk,increment]
+  name varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "診療" as treatment{
+  id int  [pk,increment]
+  "診療識別コード_id" references
+  "ユーザー_id" references
+  "診療科_id" references
+  "請求_id" references
+  created_at datetime [not null]
+ }
+Table "診療識別コード" as treatment_identification{
+  id int  [pk,increment]
+  name varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "診療科" as department{
+  id int  [pk,increment]
+  name varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "請求" as send{
+  id int  [pk,increment]
+  "点数" int
+  "金額" int
+  created_at datetime [not null]
+  }
+ref: terminal.id < receipt."端末_id"
+ref: user.id < terminal."ユーザー_id"
+ref: treatment.id < receipt."診療_id" 
+ref: treatment_identification.id - treatment."診療識別コード_id"
+ref: department.id - treatment."診療科_id"
+ref: insurance_category.id - user."保険区分_id"
+ref: receipt_detailed.id - receipt."領収書明細_id"
+view
+receipt.treatment.treatment_identification.name
+receipt."発行日"
+receipt.id
+receipt.terminal.user.id
+receipt.terminal.user.name
+receipt.treatment.department.name
+receipt."請求期間"
+receipt.user.insurance_category.name
+receipt.receipt_detailed."保険負担"
+
