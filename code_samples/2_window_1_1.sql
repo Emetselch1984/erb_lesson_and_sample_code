@@ -22,3 +22,31 @@ FROM shohin
 WINDOW W AS (ORDER BY shohin_id
 ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)
 
+-- 過去の直近の日付を求める
+SELECT sample_date AS cur_date
+MIN (sample_date)
+OVER (ORDER BY sample_date ASC
+ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING )
+AS latest_date
+FROM LoadSample;
+
+-- 直近のsample_date
+SELECT sample_date AS cur_date
+MIN (sample_date)
+OVER (ORDER BY sample_date ASC
+ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING )
+AS latest_date
+MIN (load_val)
+OVER (ORDER BY load_val ASC
+ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING )
+AS latest_load
+FROM LoadSample;
+
+-- 名前付きウィンドウでまとめる
+SELECT sample_date AS cur_date
+MIN (sample_date) OVER W AS latest_date
+MIN (load_val) OVER W AS latest_load
+FROM LoadSample
+WINDOW W AS (ORDER BY sample_date ASC
+ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING)
+
