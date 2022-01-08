@@ -61,3 +61,38 @@ FROM LoadSample
 WINDOW W AS (ORDER BY sample_date ASC
 ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING)
 
+-- 列の値に基づいたフレームを設定
+SELECT sample_date AS cur_date,
+load_val AS cur_load,
+MIN (sample_date)
+OVER (ORDER BY sample_date ASC
+RANGE  BETWEEN interval '1' day PRECEDING
+AND interval '1' day PRECEDING )
+AS day1_before,
+MIN (load_val)
+OVER (ORDER BY sample_date ASC
+RANGE  BETWEEN interval '1' day PRECEDING
+AND interval '1' day PRECEDING )
+AS load_day1_before
+FROM LoadSample;
+
+-- 3つ前の日付を表示
+
+SELECT sample_date AS cur_date,
+MIN (sample_date)
+OVER (ORDER BY sample_date ASC
+ROWS BETWEEN 1 PRECEDING
+AND 1 PRECEDING )
+AS latest1,
+MIN (sample_date)
+OVER (ORDER BY sample_date ASC
+ROWS BETWEEN 2 PRECEDING
+AND 2 PRECEDING )
+AS latest2,
+MIN (sample_date)
+OVER (ORDER BY sample_date ASC
+ROWS BETWEEN 3 PRECEDING
+AND 3 PRECEDING )
+AS latest3,
+FROM LoadSample;
+
