@@ -63,11 +63,11 @@ Table "請求内容区分" as send_context_group{
   }
 ref: user.id < send."ユーザー_id"
 ref: department.id < send."診療科_id"
-ref: treatment.id < send."端末_id"
+ref: terminal.id < send."端末_id"
 ref: treatment_identification.id < send."診療識別コード_id"
-ref: insurance_category.id < user."保険区分_id"
-ref: send.id < send_detailed."請求明細_id"
-ref: send.id < send_context."請求内容_id"
+ref: insurance.id < user."保険区分_id"
+ref: send.id < send_detailed."請求_id"
+ref: send_context_group.id < send_context."請求内容区分_id"
 view
 
 send.treatment_identification.name
