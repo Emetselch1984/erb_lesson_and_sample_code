@@ -1,0 +1,92 @@
+Table "請求" as send{
+  id int  [pk,increment]
+  "発行日" date
+  "会計番号" int
+  "ユーザー_id" references
+  "診療科_id" references
+  "端末_id" references
+  "診療識別コード_id" references
+  "請求期間開始日" date
+  "請求期間終了日" date
+  "内税[導出項目]" int
+  "備考" text
+  created_at datetime [not null]
+  }
+Table "ユーザー" as user{
+  id int  [pk,increment]
+  name varcharacter(255)
+  "患者番号" int
+  "フリガナ" varcharacter(255)
+  "保険区分_id" references
+  created_at datetime [not null]
+ }
+Table "保険" as insurance{
+  id int  [pk,increment]
+  category varcharacter(255)
+  "保険負担" int
+  created_at datetime [not null]
+ }
+Table "診療科" as department{
+  id int  [pk,increment]
+  name varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "端末" as terminal{
+  id int  [pk,increment]
+  "ユーザー_id" references
+  created_at datetime [not null]
+  }
+Table "診療識別コード" as treatment_identification{
+  id int  [pk,increment]
+  name varcharacter(255)
+  created_at datetime [not null]
+ }
+Table "請求明細書" as send_detailed{
+  id int  [pk,increment]
+   "請求_id" references
+   "請求内容_id" references
+   "点数" int
+   "保険" int
+   "自費" int
+  created_at datetime [not null]
+  }
+Table "請求内容" as send_context{
+  id int  [pk,increment]
+  name varcharacter(255)
+  "請求内容区分_id" references
+  created_at datetime [not null]
+  }
+Table "請求内容区分" as send_context_group{
+  id int  [pk,increment]
+  name varcharacter(255)
+  created_at datetime [not null]
+  }
+ref: user.id < send."ユーザー_id"
+ref: department.id < send."診療科_id"
+ref: treatment.id < send."端末_id"
+ref: treatment_identification.id < send."診療識別コード_id"
+ref: insurance_category.id < user."保険区分_id"
+ref: send.id < send_detailed."請求明細_id"
+ref: send.id < send_context."請求内容_id"
+view
+
+send.treatment_identification.name
+send."発行日"
+send."会計番号"
+send.user."患者番号"
+send.user.name
+send.department.name
+send."請求期間開始日"
+send.user.insurance.category
+send.user.insurance."保険負担"
+send.send_detailed.send_context.send_context_group.name
+send.send_detailed."点数"
+send.send_detailed."保険"
+send.send_detailed."自費"
+send."備考"
+
+
+
+
+
+
